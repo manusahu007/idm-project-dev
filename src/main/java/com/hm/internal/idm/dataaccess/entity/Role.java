@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -37,9 +38,23 @@ public class Role {
     @ManyToMany(cascade = CascadeType.PERSIST, targetEntity = Permission.class,fetch = FetchType.EAGER )
     @JoinTable(name = "role_permissions", joinColumns = {@JoinColumn(name = " role_id")}, inverseJoinColumns = {@JoinColumn(name = " permission_id")})
 	private Set<Permission> permissions;
-    
 
-    public Set<Permission> getPermissions() {
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	@JsonBackReference
+	@ManyToMany(mappedBy = "rolesSet" , fetch = FetchType.LAZY ,targetEntity = User.class,cascade = CascadeType.ALL)
+	private Set<User> users;
+
+
+
+
+	public Set<Permission> getPermissions() {
 		return permissions;
 	}
 

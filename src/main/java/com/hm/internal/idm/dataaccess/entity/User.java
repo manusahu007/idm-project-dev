@@ -2,13 +2,10 @@ package com.hm.internal.idm.dataaccess.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 @Table(name = "USER")
 @Entity
 public class User implements Serializable{
@@ -44,7 +41,7 @@ public class User implements Serializable{
     @Column(name = "STATUS")
     private Character status;
     @Column(name = "USER_TYPE")
-    private Boolean userType;
+    private Integer userType;
     @Column(name = "PASSWORD_EXPIRY")
     private Timestamp passwordExpiryDate;
     @Column(name = "CREATE_DATE")
@@ -55,8 +52,20 @@ public class User implements Serializable{
 	private Timestamp lastLoginDate;
 	@Column(name = "NAME")
 	private String name;
-	
-    
+	@ManyToMany(cascade = CascadeType.PERSIST, targetEntity = Role.class,fetch = FetchType.EAGER )
+	@JoinTable(name = "USER_ROLES", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
+	private Set<Role> rolesSet;
+
+
+
+	public Set<Role> getRoles() {
+		return rolesSet;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.rolesSet = roles;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -141,10 +150,10 @@ public class User implements Serializable{
 	public void setStatus(Character status) {
 		this.status = status;
 	}
-	public Boolean getUserType() {
+	public Integer getUserType() {
 		return userType;
 	}
-	public void setUserType(Boolean userType) {
+	public void setUserType(Integer userType) {
 		this.userType = userType;
 	}
 	public Timestamp getPasswordExpiryDate() {
@@ -171,7 +180,8 @@ public class User implements Serializable{
 				+ ", passwordExpiryDate=" + passwordExpiryDate + ", lastLoginDate=" + lastLoginDate + "]";
 	}
 
-  
 
+	public void setRolesSet(Set<Role> rolesSet) {
+	}
 }
 
